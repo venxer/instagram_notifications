@@ -1,0 +1,31 @@
+Class notification
+    - like
+    - tag
+    - comment
+    - follow
+    - message requests
+
+turn on or off like notification
+turn on or off tag notification
+turn on or off comment notification
+turn on or off follow notification
+turn on or off message request notification
+bool pause all notification 
+
+program command:
+nynotifications.exe posts.json users.json events.txt output.txt username
+
+posts.json
+    Each line in this json file represents one post on Instagram.
+users.json 
+    Each line in this json file represents one user on Instagram.
+    users' notification preferences. 
+events.txt 
+    defines all events which might trigger a notification
+output.txt 
+    output where each line in this output file should represent one notification
+username
+    output file should contain notifications which are only supposed to be 
+    delivered to this user as specified by this username.
+
+id: Instagram assigns each post an id.
