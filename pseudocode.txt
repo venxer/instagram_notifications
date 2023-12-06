@@ -5,11 +5,11 @@ Class notification
     - follow
     - message requests
 
-turn on or off like notification
-turn on or off tag notification
-turn on or off comment notification
-turn on or off follow notification
-turn on or off message request notification
+bool turn on or off like notification
+bool turn on or off tag notification
+bool turn on or off comment notification
+bool turn on or off follow notification
+bool turn on or off message request notification
 bool pause all notification 
 
 program command:
@@ -28,4 +28,54 @@ username
     output file should contain notifications which are only supposed to be 
     delivered to this user as specified by this username.
 
+POST FORMAT:
 id: Instagram assigns each post an id.
+mentions: Mentions from the post. 
+taggedUsers: whom the post author tags
+ownerUsername: username of post author
+
+EVENT FORMAT:
+COMMANDS:
+    like-
+        username likes postID
+
+    tags-
+        username tags username
+
+    comments_on-
+        usernames comments_on postID
+
+    follows-
+        username follows username
+
+    messageRequests
+        username messageRequests username
+
+USER FORMAT:
+username: username of user
+notificationPref: "pauseAll"
+                  "likes"
+                  "tags"
+                  "comments"
+                  "newFollowers"
+                  "messageRequests"
+
+Max Number of Notifications: 100
+
+Notification Aggregation:
+    Occurs when more than 3 of the same notifcations occur in a row:
+    Shows the 2 most recent: 
+    
+    ex: A likes post
+        B likes post
+        C likes post
+            C and B likes post
+
+
+
+                 
+                 
+                 
+                 
+                 
+
