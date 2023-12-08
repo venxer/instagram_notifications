@@ -7,6 +7,7 @@
 #include <stack>
 #include <fstream>
 #include <unordered_map>
+#include <memory>
 
 class User
 {
@@ -17,7 +18,7 @@ class User
         bool comments;
         bool newFollowers;
         bool messageRequests;
-        std::queue<Notification*> notifications;
+        std::queue<std::shared_ptr<Notification> > notifications;
         std::stack<std::string> notificationStack;
 
     public:
@@ -29,7 +30,7 @@ class User
              bool newFollowers,
              bool messageRequests);
 
-        void noticationQueue(Notification *notification);
+        void noticationQueue(std::shared_ptr<Notification> notification);
         void addNotifcation(const std::string &notificationMessages);
         void printNotifications(std::ofstream &outputFile);
 

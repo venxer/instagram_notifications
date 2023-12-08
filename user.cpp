@@ -23,7 +23,7 @@ User::User(std::string username,
     this->newFollowers = newFollowers;
     this->messageRequests = messageRequests;
 }
-void User::noticationQueue(Notification *notification)
+void User::noticationQueue(std::shared_ptr<Notification> notification)
 {   
     if(notification->getType() == "Like" && !likes)                     return;
     if(notification->getType() == "Tag" && !tags)                       return;
@@ -98,29 +98,29 @@ bool parseEvents(std::ifstream &eventFile, const std::unordered_map<std::string,
         
         if(mode == "likes")
         {
-            recievingUser.noticationQueue(new Like(triggerUsername));
+            recievingUser.noticationQueue(std::make_shared<Like>(triggerUsername));
         }
         else if(mode == "tags")
         {
-            recievingUser.noticationQueue(new Tag(triggerUsername));
+            recievingUser.noticationQueue(std::make_shared<Tag>(triggerUsername));
 
 
         }
         else if(mode == "comments_on")
         {
-            recievingUser.noticationQueue(new Comment(triggerUsername));
+            recievingUser.noticationQueue(std::make_shared<Comment>(triggerUsername));
 
 
         }
         else if(mode == "follows")
         {
-            recievingUser.noticationQueue(new Follow(triggerUsername));
+            recievingUser.noticationQueue(std::make_shared<Follow>(triggerUsername));
 
 
         }
         else if(mode == "messageRequests")
         {
-            recievingUser.noticationQueue(new MessageRequest(triggerUsername));
+            recievingUser.noticationQueue(std::make_shared<MessageRequest>(triggerUsername));
         }
     }
     return true;
