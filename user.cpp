@@ -61,7 +61,7 @@ void User::noticationQueue(Notification *notification)
             }
             else
             {
-                while(!notifications.empty() && notificationStack.size() < 100)
+                while(!notifications.empty())
                 {
                     addNotifcation(notifications.front()->singeNotificationMessage());
                     notifications.pop();
@@ -70,7 +70,7 @@ void User::noticationQueue(Notification *notification)
                 notifications.push(notification);
             }
         }
-    }
+    }    
 }
 void User::addNotifcation(const std::string &notificationMessages)
 {
@@ -96,7 +96,6 @@ bool parseEvents(std::ifstream &eventFile, const std::unordered_map<std::string,
             if(query != recievingUser.username) continue;
         }
         
-        if(recievingUser.notificationStack.size() >= 100) return true;
         if(mode == "likes")
         {
             recievingUser.noticationQueue(new Like(triggerUsername));
@@ -121,7 +120,6 @@ bool parseEvents(std::ifstream &eventFile, const std::unordered_map<std::string,
         }
         else if(mode == "messageRequests")
         {
-
             recievingUser.noticationQueue(new MessageRequest(triggerUsername));
         }
     }
@@ -129,14 +127,34 @@ bool parseEvents(std::ifstream &eventFile, const std::unordered_map<std::string,
 }
 void User::printNotifications(std::ofstream &outputFile)
 {
-    // while(!notifications.empty() && notificationStack.size() < 100)
-    // {
-    //     notificationStack.push(notifications.front()->singeNotificationMessage());
-    //     notifications.pop();
-    // }
-    while(!notificationStack.empty())
+    while(!notifications.empty())
+    {
+        if(notifications.size() > 3)
+        {
+            int size = notifications.size();
+            while(notifications.size() != 2)
+            {
+                notifications.pop();
+            }
+            std::string second = notifications.front()->getTriggeringUser();
+            notifications.pop();
+            std::string first = notifications.front()->getTriggeringUser();
+            addNotifcation(notifications.front()->aggregateNotificationMessage(first, second, size - 2));
+            notifications.pop();
+        }
+        else
+        {
+            notificationStack.push(notifications.front()->singeNotificationMessage());
+            notifications.pop();
+        }
+
+    }
+    int outputCount = 0;
+    while(!notificationStack.empty() && outputCount < 100)
     {
         outputFile << notificationStack.top() << "\n";
         notificationStack.pop();
+        outputCount++;
     }
 }
+
