@@ -22,7 +22,6 @@ int main(int argc, char const *argv[])
         {
             throw std::invalid_argument("Invalid Argument Count");
         }
-        //nynotifications.exe posts.json users.json events.txt output.txt username
 
         std::ifstream postJSON        = validateFile<std::ifstream>(argv[1]);
         std::ifstream userJSON        = validateFile<std::ifstream>(argv[2]);
@@ -37,7 +36,6 @@ int main(int argc, char const *argv[])
         if(!parseSuccess) return 0;
         
         std::unordered_map<std::string, std::string> postIDToAuthorMap = parsePosts(postJSON);
-
         parseEvents(eventsFile, postIDToAuthorMap, user);
 
         user.printNotifications(output);
