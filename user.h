@@ -31,14 +31,13 @@ class User
              bool messageRequests);
 
         void aggregateNotification();
-        void noticationQueue(const std::shared_ptr<Notification> &notification);
-        void addNotifcation(const std::string &notificationMessages);
+        void notificationQueue(const std::shared_ptr<Notification> &notification);
         void printNotifications(std::ofstream &outputFile);
 
         friend void parseEvents(std::ifstream &eventFile, const std::unordered_map<std::string, std::string> &postIDToAuthorMap, 
-                                User &recievingUser);
+                                User &receivingUser);
 };
 void parseEvents(std::ifstream &eventFile, const std::unordered_map<std::string, std::string> &postIDToAuthorMap, 
-                 User &recievingUser);
+                 User &receivingUser);
 
 #endif

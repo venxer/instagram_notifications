@@ -19,15 +19,18 @@ T validateFile(const std::string &fileName);
  * @param  userJSON          : Input file stream of JSON file with user information
  * @param  receivingUsername : Username to search for in the JSON file
  * @param  receivingUser     : Reference to a User object where the user's data will be stored
+ * 
  * @return {bool}            : True if the user is found and their data is successfully parsed and stored in receivingUser
  *                             False if the user is not found in the file, or if the user has paused all notifications
  */
 bool parseUser(std::ifstream &userJSON, const std::string &receivingUsername, User &receivingUser);
 /**
+ * Parses a JSON file to create a mapping between postIDs and their respective authors
  * 
+ * @param  postJSON                           : Input file stream of JSON file with post information
  * 
- * @param  postJSON                           : 
- * @return {std::unordered_map<std::string,}  : 
+ * @return {std::unordered_map<std::string,}  : An unordered map where each key is a postID and its corresponding 
+ *                                              value is the author's username
  */
 std::unordered_map<std::string, std::string> parsePosts(std::ifstream &postJSON);
 
@@ -39,10 +42,6 @@ int main(int argc, char const *argv[])
         {
             throw std::invalid_argument("Invalid Argument Count");
         }
-<<<<<<< HEAD
-
-=======
->>>>>>> 1142c0b6fbee5d339ba8f09cb16e3349e781574f
         std::ifstream postJSON        = validateFile<std::ifstream>(argv[1]);
         std::ifstream userJSON        = validateFile<std::ifstream>(argv[2]);
         std::ifstream eventsFile      = validateFile<std::ifstream>(argv[3]);
@@ -56,6 +55,7 @@ int main(int argc, char const *argv[])
         if(!parseSuccess) return 0;
         
         std::unordered_map<std::string, std::string> postIDToAuthorMap = parsePosts(postJSON);
+        // Fill user notifications with events based on events
         parseEvents(eventsFile, postIDToAuthorMap, user);
 
         user.printNotifications(output);
@@ -131,6 +131,8 @@ std::unordered_map<std::string, std::string> parsePosts(std::ifstream &postJSON)
     std::unordered_map<std::string, std::string> postIDToAuthorMap;
 
     std::string line;
+
+    // Read each line of map
     while(std::getline(postJSON, line)) 
     {
         size_t postIDTagStart = line.find("\"id\":\"") + 6;
@@ -143,6 +145,7 @@ std::unordered_map<std::string, std::string> parsePosts(std::ifstream &postJSON)
         size_t postAuthorEnd = line.find("\"", postAuthorStart);
         std::string postAuthor = line.substr(postAuthorStart, postAuthorEnd - postAuthorStart);
 
+        // Key and map
         postIDToAuthorMap[postID] = postAuthor;
     }
     return postIDToAuthorMap;

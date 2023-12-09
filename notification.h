@@ -7,7 +7,7 @@ class Notification
 {
     protected:
         std::string type;
-        std::string triggeringUser; // User causing effect
+        std::string triggeringUser;
 
     public:
         Notification(std::string triggeringUser);
@@ -17,7 +17,7 @@ class Notification
         virtual std::string aggregateNotificationMessage(const std::string &first, const std::string &second, const int &count) = 0;
 
         std::string getTriggeringUser() const {return triggeringUser;};
-        std::string getType()           const {return type;};
+        std::string getType()           const {return type;          };
 };
 
 class Like:public Notification
