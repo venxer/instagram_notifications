@@ -23,7 +23,20 @@ User::User(std::string username,
     this->newFollowers = newFollowers;
     this->messageRequests = messageRequests;
 }
-void User::noticationQueue(std::shared_ptr<Notification> notification)
+void User::aggregateNotification()
+{
+    int size = notifications.size();
+    while(notifications.size() != 2)
+    {
+        notifications.pop();
+    }
+    std::string second = notifications.front()->getTriggeringUser();
+    notifications.pop();
+    std::string first = notifications.front()->getTriggeringUser();
+    addNotifcation(notifications.front()->aggregateNotificationMessage(first, second, size - 2));
+    notifications.pop();
+}
+void User::noticationQueue(const std::shared_ptr<Notification> &notification)
 {   
     if(notification->getType() == "Like" && !likes)                     return;
     if(notification->getType() == "Tag" && !tags)                       return;
@@ -46,17 +59,7 @@ void User::noticationQueue(std::shared_ptr<Notification> notification)
         {
             if(notifications.size() > 3)
             {
-                int size = notifications.size();
-                while(notifications.size() != 2)
-                {
-                    notifications.pop();
-                }
-                std::string second = notifications.front()->getTriggeringUser();
-                notifications.pop();
-                std::string first = notifications.front()->getTriggeringUser();
-                addNotifcation(notifications.front()->aggregateNotificationMessage(first, second, size - 2));
-                notifications.pop();
-
+                aggregateNotification();
                 notifications.push(notification);
             }
             else
@@ -76,7 +79,7 @@ void User::addNotifcation(const std::string &notificationMessages)
 {
     notificationStack.push(notificationMessages);
 }
-bool parseEvents(std::ifstream &eventFile, const std::unordered_map<std::string, std::string> &postIDToAuthorMap, 
+void parseEvents(std::ifstream &eventFile, const std::unordered_map<std::string, std::string> &postIDToAuthorMap, 
                 User &recievingUser)
 {
     std::string triggerUsername, mode, query;
@@ -103,51 +106,35 @@ bool parseEvents(std::ifstream &eventFile, const std::unordered_map<std::string,
         else if(mode == "tags")
         {
             recievingUser.noticationQueue(std::make_shared<Tag>(triggerUsername));
-
-
         }
         else if(mode == "comments_on")
         {
             recievingUser.noticationQueue(std::make_shared<Comment>(triggerUsername));
-
-
         }
         else if(mode == "follows")
         {
             recievingUser.noticationQueue(std::make_shared<Follow>(triggerUsername));
-
-
         }
         else if(mode == "messageRequests")
         {
             recievingUser.noticationQueue(std::make_shared<MessageRequest>(triggerUsername));
         }
     }
-    return true;
 }
+
 void User::printNotifications(std::ofstream &outputFile)
 {
     while(!notifications.empty())
     {
         if(notifications.size() > 3)
         {
-            int size = notifications.size();
-            while(notifications.size() != 2)
-            {
-                notifications.pop();
-            }
-            std::string second = notifications.front()->getTriggeringUser();
-            notifications.pop();
-            std::string first = notifications.front()->getTriggeringUser();
-            addNotifcation(notifications.front()->aggregateNotificationMessage(first, second, size - 2));
-            notifications.pop();
+            aggregateNotification();
         }
         else
         {
             notificationStack.push(notifications.front()->singeNotificationMessage());
             notifications.pop();
         }
-
     }
     int outputCount = 0;
     while(!notificationStack.empty() && outputCount < 100)
@@ -157,4 +144,3 @@ void User::printNotifications(std::ofstream &outputFile)
         outputCount++;
     }
 }
-

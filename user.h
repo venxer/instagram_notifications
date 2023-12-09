@@ -30,15 +30,15 @@ class User
              bool newFollowers,
              bool messageRequests);
 
-        void noticationQueue(std::shared_ptr<Notification> notification);
+        void aggregateNotification();
+        void noticationQueue(const std::shared_ptr<Notification> &notification);
         void addNotifcation(const std::string &notificationMessages);
         void printNotifications(std::ofstream &outputFile);
 
-        friend bool parseEvents(std::ifstream &eventFile, const std::unordered_map<std::string, std::string> &postIDToAuthorMap, 
+        friend void parseEvents(std::ifstream &eventFile, const std::unordered_map<std::string, std::string> &postIDToAuthorMap, 
                                 User &recievingUser);
 };
-
-bool parseEvents(std::ifstream &eventFile, const std::unordered_map<std::string, std::string> &postIDToAuthorMap, 
+void parseEvents(std::ifstream &eventFile, const std::unordered_map<std::string, std::string> &postIDToAuthorMap, 
                  User &recievingUser);
 
 #endif
