@@ -11,7 +11,24 @@
  */
 template<typename T>
 T validateFile(const std::string &fileName);
+/**
+ * Parses a JSON file to extract user notification settings for likes, tags, comments, new followers, 
+ * and message requests notifications of a specific username. Also checks if all notifications are paused.
+ * Function updates the receivingUser object with these notfication preferences.
+ * 
+ * @param  userJSON          : Input file stream of JSON file with user information
+ * @param  receivingUsername : Username to search for in the JSON file
+ * @param  receivingUser     : Reference to a User object where the user's data will be stored
+ * @return {bool}            : True if the user is found and their data is successfully parsed and stored in receivingUser
+ *                             False if the user is not found in the file, or if the user has paused all notifications
+ */
 bool parseUser(std::ifstream &userJSON, const std::string &receivingUsername, User &receivingUser);
+/**
+ * 
+ * 
+ * @param  postJSON                           : 
+ * @return {std::unordered_map<std::string,}  : 
+ */
 std::unordered_map<std::string, std::string> parsePosts(std::ifstream &postJSON);
 
 int main(int argc, char const *argv[])
@@ -22,7 +39,10 @@ int main(int argc, char const *argv[])
         {
             throw std::invalid_argument("Invalid Argument Count");
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 1142c0b6fbee5d339ba8f09cb16e3349e781574f
         std::ifstream postJSON        = validateFile<std::ifstream>(argv[1]);
         std::ifstream userJSON        = validateFile<std::ifstream>(argv[2]);
         std::ifstream eventsFile      = validateFile<std::ifstream>(argv[3]);
